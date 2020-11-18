@@ -1,0 +1,59 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EZ Quiz 2</title>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300&display=swap" rel="stylesheet">
+    
+    <style>
+        body{font-family: 'Kanit', sans-serif; background-color: aquamarine;}
+        #musicsearch{margin-bottom:30px;}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <form id="musicsearch"></form>
+        <label for="srch"><h2><b>ระบุคำค้นหา</b></h2></label>
+        <input type="text" id="srch" name="srch" style="width:80%;">
+        <input type="button" onclick="result()" value="ค้นหา">
+        <div class="card" id="playlist" >
+
+        </div>
+    </div>
+
+    <script>
+            
+            let requestURL = "ezquiz.json";
+            let request = new XMLHttpRequest();
+            request.onreadystatechange = function() {
+                if (request.readyState == 4 && request.status == 200) {
+                    musicplayer(JSON.parse(request.responseText));
+                }
+            };
+            request.open("GET", requestURL, true);
+            request.send();
+
+            function musicplayer(data){
+                var music = "";
+                for (var i=0; i<data.tracks.items.length; i++){
+                    music += `<div class="card-body" id="song" style="width:640; border: 2px grey solid; margin:20px;background-color:white; float:left;">`
+                    music += `<img src="${data.tracks.items[i].album.images[0].url}" style="width: 640px;">`
+                    music += `<h2><b>${data.tracks.items[i].album.name}</b></h2><p>Artist : ${data.tracks.items[i].album.artists[0].name}</p>`
+                    music += `<p>Release date : ${data.tracks.items[i].album.release_date}</p>`
+                    music += `<p>Available : ${data.tracks.items[i].album.available_markets.length} countries</p>`
+                    music += `</div>`
+                }
+                document.getElementById('playlist').innerHTML = music;
+            }
+
+            function result() {
+                var musicsearch = document.getElementById("srch").value;
+
+                document.getElementById('song').src = musicsearch;
+
+                
+            }
+            
+    </script>
+</body>
+</html>
